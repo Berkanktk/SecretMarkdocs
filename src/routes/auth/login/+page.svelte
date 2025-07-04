@@ -25,7 +25,7 @@
     <Card padding="large">
       <div class="auth-header">
         <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to access your secret notes</p>
+        <p class="auth-subtitle">Sign in to access your vault</p>
       </div>
       
       <form method="POST" action="?/login" use:enhance={() => {
