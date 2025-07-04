@@ -82,60 +82,154 @@
 <style>
   .shield-animated {
     animation: secretPulse 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
+    filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
+    transform-origin: center;
   }
 
   .shield-animated circle:first-child {
     animation: outerRing 15s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
   }
 
   .shield-animated circle:nth-child(2) {
     animation: innerRing 10s linear infinite reverse;
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.4));
   }
 
   .shield-animated path:first-of-type {
     animation: shieldGlow 3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.4));
   }
 
   .shield-animated path:last-child,
   .shield-animated path:nth-last-child(2) {
     animation: dataFlow 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
   }
+
+  /* Enhanced corner dots with pulsing */
+  .shield-animated circle:nth-child(6),
+  .shield-animated circle:nth-child(7),
+  .shield-animated circle:nth-child(8),
+  .shield-animated circle:nth-child(9) {
+    animation: cornerPulse 2s ease-in-out infinite;
+  }
+
+  /* Staggered delays for corner dots */
+  .shield-animated circle:nth-child(6) { animation-delay: 0s; }
+  .shield-animated circle:nth-child(7) { animation-delay: 0.5s; }
+  .shield-animated circle:nth-child(8) { animation-delay: 1s; }
+  .shield-animated circle:nth-child(9) { animation-delay: 1.5s; }
 
   @keyframes secretPulse {
     0%, 100% { 
-      transform: scale(1);
-      filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
+      transform: scale(1) rotate(0deg);
+      filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
+    }
+    25% {
+      transform: scale(1.02) rotate(0.5deg);
+      filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.6));
     }
     50% { 
-      transform: scale(1.03);
+      transform: scale(1.05) rotate(0deg);
+      filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.7));
+    }
+    75% {
+      transform: scale(1.02) rotate(-0.5deg);
       filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.6));
     }
   }
 
   @keyframes outerRing {
-    from { stroke-dashoffset: 0; }
-    to { stroke-dashoffset: 75; }
+    0% { 
+      stroke-dashoffset: 0; 
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% { 
+      stroke-dashoffset: 75; 
+      opacity: 0.3;
+    }
   }
 
   @keyframes innerRing {
-    from { stroke-dashoffset: 0; }
-    to { stroke-dashoffset: -90; }
+    0% { 
+      stroke-dashoffset: 0; 
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 0.9;
+    }
+    100% { 
+      stroke-dashoffset: -90; 
+      opacity: 0.6;
+    }
   }
 
   @keyframes shieldGlow {
-    from { 
+    0% { 
       opacity: 0.8; 
-      filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.3));
+      filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+      fill: rgba(99, 102, 241, 0.1);
     }
-    to { 
+    50% {
+      opacity: 0.9;
+      filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6));
+      fill: rgba(139, 92, 246, 0.15);
+    }
+    100% { 
       opacity: 1; 
-      filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
+      filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.8));
+      fill: rgba(99, 102, 241, 0.2);
     }
   }
 
   @keyframes dataFlow {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.8; }
+    0% { 
+      opacity: 0.3; 
+      stroke-dashoffset: 0;
+    }
+    25% {
+      opacity: 0.6;
+      stroke-dashoffset: 5;
+    }
+    50% { 
+      opacity: 0.9; 
+      stroke-dashoffset: 10;
+    }
+    75% {
+      opacity: 0.6;
+      stroke-dashoffset: 15;
+    }
+    100% { 
+      opacity: 0.3; 
+      stroke-dashoffset: 20;
+    }
+  }
+
+  @keyframes cornerPulse {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+      filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.3));
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.5);
+      filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.6));
+    }
+  }
+
+  /* Enhanced non-animated shield */
+  svg:not(.shield-animated) {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.3));
+  }
+
+  svg:not(.shield-animated):hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
   }
 </style> 

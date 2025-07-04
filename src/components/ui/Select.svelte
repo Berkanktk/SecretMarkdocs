@@ -1,5 +1,4 @@
 <script>
-  export let type = 'text';
   export let value = '';
   export let placeholder = '';
   export let label = '';
@@ -8,19 +7,20 @@
   export let required = false;
   export let fullWidth = false;
   export let id = null;
+  export let options = []; // Array of {value, label} objects
   
   $: inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
   $: classes = [
-    'input',
-    error && 'input-error',
-    disabled && 'input-disabled',
-    fullWidth && 'input-full-width'
+    'select',
+    error && 'select-error',
+    disabled && 'select-disabled',
+    fullWidth && 'select-full-width'
   ].filter(Boolean).join(' ');
 </script>
 
-<div class="input-group" class:full-width={fullWidth}>
+<div class="select-group" class:full-width={fullWidth}>
   {#if label}
-    <label for={inputId} class="input-label">
+    <label for={inputId} class="select-label">
       {label}
       {#if required}
         <span class="required">*</span>
@@ -28,89 +28,43 @@
     </label>
   {/if}
   
-  {#if type === 'text'}
-    <input
-      {id}
-      type="text"
-      {placeholder}
-      {disabled}
-      {required}
-      bind:value
-      class={classes}
-      on:input
-      on:change
-      on:focus
-      on:blur
-      on:keypress
-      {...$$restProps}
-    />
-  {:else if type === 'password'}
-    <input
-      {id}
-      type="password"
-      {placeholder}
-      {disabled}
-      {required}
-      bind:value
-      class={classes}
-      on:input
-      on:change
-      on:focus
-      on:blur
-      on:keypress
-      {...$$restProps}
-    />
-  {:else if type === 'email'}
-    <input
-      {id}
-      type="email"
-      {placeholder}
-      {disabled}
-      {required}
-      bind:value
-      class={classes}
-      on:input
-      on:change
-      on:focus
-      on:blur
-      on:keypress
-      {...$$restProps}
-    />
-  {:else}
-    <input
-      {id}
-      type="text"
-      {placeholder}
-      {disabled}
-      {required}
-      bind:value
-      class={classes}
-      on:input
-      on:change
-      on:focus
-      on:blur
-      on:keypress
-      {...$$restProps}
-    />
-  {/if}
+  <select
+    {id}
+    {disabled}
+    {required}
+    bind:value
+    class={classes}
+    on:change
+    on:focus
+    on:blur
+    {...$$restProps}
+  >
+    {#if placeholder}
+      <option value="" disabled selected={!value}>{placeholder}</option>
+    {/if}
+    {#each options as option}
+      <option value={option.value}>{option.label}</option>
+    {/each}
+    <slot />
+  </select>
   
   {#if error}
-    <div class="input-error-message">{error}</div>
+    <div class="select-error-message">{error}</div>
   {/if}
 </div>
 
 <style>
-  .input-group {
+  .select-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .input-group.full-width {
+  .select-group.full-width {
     width: 100%;
   }
 
-  .input-label {
+  .select-label {
     font-weight: 500;
     color: #f1f5f9;
     font-size: 0.875rem;
@@ -124,28 +78,38 @@
     color: #ef4444;
   }
 
-  .input {
+  .select {
     padding: 0.75rem 1rem;
     border: 2px solid rgba(99, 102, 241, 0.2);
     border-radius: 12px;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     color: #f1f5f9;
-    font-size: 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
     transition: all 0.3s ease;
     font-family: inherit;
     letter-spacing: 0.02em;
     box-shadow: 
       0 4px 15px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    padding-right: 3rem;
   }
 
-  .input::placeholder {
-    color: #64748b;
-    opacity: 0.8;
+  .select:hover:not(.select-disabled) {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
   }
 
-  .input:focus {
+  .select:focus {
     outline: none;
     border-color: #6366f1;
     background: rgba(0, 0, 0, 0.6);
@@ -154,16 +118,17 @@
       0 4px 20px rgba(99, 102, 241, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transform: translateY(-1px);
+    animation: focusGlow 0.3s ease-out;
   }
 
-  .input-error {
+  .select-error {
     border-color: #ef4444;
     box-shadow: 
       0 4px 15px rgba(239, 68, 68, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  .input-error:focus {
+  .select-error:focus {
     border-color: #ef4444;
     box-shadow: 
       0 0 0 3px rgba(239, 68, 68, 0.1),
@@ -171,25 +136,39 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .input-disabled {
+  .select-disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background: rgba(0, 0, 0, 0.2);
     border-color: rgba(99, 102, 241, 0.1);
   }
 
-  .input-disabled:focus {
+  .select-disabled:focus {
     transform: none;
     box-shadow: 
       0 4px 15px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  .input-full-width {
+  .select-full-width {
     width: 100%;
   }
 
-  .input-error-message {
+  .select option {
+    background: rgba(15, 15, 35, 0.95);
+    color: #f1f5f9;
+    padding: 0.75rem;
+    border: none;
+    font-size: 0.875rem;
+  }
+
+  .select option:hover,
+  .select option:checked {
+    background: rgba(99, 102, 241, 0.2);
+    color: #f1f5f9;
+  }
+
+  .select-error-message {
     color: #ef4444;
     font-size: 0.875rem;
     display: flex;
@@ -198,28 +177,9 @@
     margin-top: 0.25rem;
   }
 
-  .input-error-message::before {
+  .select-error-message::before {
     content: '⚠️';
     font-size: 0.75rem;
-  }
-
-  /* Hover effects for non-disabled inputs */
-  .input:not(.input-disabled):hover {
-    border-color: rgba(99, 102, 241, 0.4);
-    box-shadow: 
-      0 4px 20px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
-  /* Special styling for password inputs */
-  .input[type="password"] {
-    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-    letter-spacing: 0.1em;
-  }
-
-  /* Enhanced focus ring animation */
-  .input:focus {
-    animation: focusGlow 0.3s ease-out;
   }
 
   @keyframes focusGlow {

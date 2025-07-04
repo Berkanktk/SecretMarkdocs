@@ -121,6 +121,11 @@ export class Database {
     return { ...user, _id: user._id?.toString() };
   }
 
+  async getUserById(userId: string): Promise<User | null> {
+    const user = await this.users.findOne({ _id: new ObjectId(userId) as any });
+    return user ? { ...user, _id: user._id?.toString() } : null;
+  }
+
   async createNote(
     title: string, 
     description: string,

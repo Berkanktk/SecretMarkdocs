@@ -16,6 +16,9 @@
 </svelte:head>
 
 <div class="hero-section">
+  <div class="background-overlay"></div>
+  <div class="particles"></div>
+  
   <div class="container">
     <div class="hero-content" class:fade-in={mounted}>
       <div class="hero-badge">
@@ -48,6 +51,9 @@
 </div>
 
 <div class="notes-section">
+  <div class="background-overlay"></div>
+  <div class="particles"></div>
+  
   <div class="container">
     <div class="section-header">
       <h2>Your Secret Notes</h2>
@@ -96,6 +102,9 @@
 </div>
 
 <div class="info-section">
+  <div class="background-overlay"></div>
+  <div class="particles"></div>
+  
   <div class="container">
     <div class="info-content">
       <h2>How it works</h2>
@@ -128,40 +137,77 @@
 
 <style>
   .hero-section {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     padding: 3rem 0 4rem;
     position: relative;
     overflow: hidden;
   }
-  
-  .hero-section::before {
-    content: '';
+
+  .notes-section {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    padding: 4rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .info-section {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    padding: 4rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .background-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+    background: 
+      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
     pointer-events: none;
+  }
+
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  @keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
   }
   
   .hero-content {
     text-align: center;
     position: relative;
-    z-index: 1;
+    z-index: 10;
   }
   
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: #94a3b8;
     margin-bottom: 2rem;
   }
   
@@ -174,11 +220,11 @@
     font-weight: 700;
     margin: 0 0 1.5rem 0;
     line-height: 1.1;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -186,7 +232,7 @@
   
   .hero-subtitle {
     font-size: 1.125rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
     max-width: 600px;
     margin: 0 auto 2.5rem;
     line-height: 1.6;
@@ -209,12 +255,12 @@
   .stat-number {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--primary-color);
+    color: #6366f1;
   }
   
   .stat-label {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
   }
   
   .notes-section {
@@ -224,18 +270,20 @@
   .section-header {
     text-align: center;
     margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 10;
   }
   
   .section-header h2 {
     font-size: 2rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .section-header p {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
     margin: 0;
   }
   
@@ -247,19 +295,27 @@
   }
   
   .note-card {
-    background: #111827;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
     padding: 1.5rem;
-    transition: var(--transition);
+    transition: all 0.3s ease;
     position: relative;
-    padding: 20px !important;
-    border-radius: 15px !important;
+    z-index: 10;
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
   .note-card:hover {
-    box-shadow: var(--shadow-lg);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(99, 102, 241, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
+    border-color: rgba(99, 102, 241, 0.4);
   }
   
   .card-header {
@@ -279,14 +335,14 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
   }
   
   .status-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: #8b5cf6;
   }
   
   .card-content {
@@ -297,11 +353,11 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .card-description {
-    color: var(--text-secondary);
+    color: #94a3b8;
     line-height: 1.5;
     margin: 0;
     font-size: 0.875rem;
@@ -314,7 +370,7 @@
   
   .btn svg {
     margin-left: 0.5rem;
-    transition: var(--transition);
+    transition: transform 0.3s ease;
   }
   
   .btn:hover svg {
@@ -324,7 +380,9 @@
   .empty-state {
     text-align: center;
     padding: 3rem 2rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
+    position: relative;
+    z-index: 10;
   }
   
   .empty-icon {
@@ -335,7 +393,7 @@
   .empty-state h3 {
     font-size: 1.25rem;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .info-section {
@@ -347,13 +405,15 @@
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    position: relative;
+    z-index: 10;
   }
   
   .info-content h2 {
     font-size: 2rem;
     font-weight: 600;
     margin: 0 0 2rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .steps {
@@ -373,7 +433,7 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: var(--primary-color);
+    background: #6366f1;
     color: white;
     display: flex;
     align-items: center;
@@ -387,11 +447,11 @@
     font-size: 1.125rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .step-content p {
-    color: var(--text-secondary);
+    color: #94a3b8;
     margin: 0;
     line-height: 1.5;
   }

@@ -20,6 +20,7 @@
   let showInviteSection = false;
   let generatingInvite = false;
   let deletingInvite = false;
+  let copiedStates: Record<string, boolean> = {}; // Track copied state for each invite
 
   async function loadInvites() {
     try {
@@ -61,8 +62,18 @@
     }
   }
 
-  function copyToClipboard(text: string) {
+  function copyToClipboard(text: string, inviteId: string) {
     navigator.clipboard.writeText(text);
+    
+    // Show copied state
+    copiedStates[inviteId] = true;
+    copiedStates = { ...copiedStates }; // Trigger reactivity
+    
+    // Hide after 2 seconds
+    setTimeout(() => {
+      copiedStates[inviteId] = false;
+      copiedStates = { ...copiedStates };
+    }, 2000);
   }
 
   async function deleteInvite(inviteId: string) {
@@ -95,6 +106,9 @@
 </svelte:head>
 
 <div class="dashboard">
+  <div class="background-overlay"></div>
+  <div class="particles"></div>
+  
   <div class="container">
     <div class="dashboard-header" class:fade-in={mounted}>
       <div class="header-content">
@@ -184,7 +198,7 @@
       {#if data.user.isAdmin}
         <div class="invites-section">
           <div class="section-header">
-            <h2>Invite Management</h2>
+            <h2>Manage Invites</h2>
             <Button variant="secondary" on:click={toggleInviteSection}>
               {showInviteSection ? 'Hide' : 'Show'} Invites
             </Button>
@@ -203,14 +217,21 @@
                   <div class="invite-card">
                     <div class="invite-code">
                       <code>{invite.code}</code>
-                      <Button 
-                        size="small"
-                        variant="secondary"
-                        on:click={() => copyToClipboard(invite.code)} 
-                        title="Copy to clipboard"
-                      >
-                        <Copy />
-                      </Button>
+                      <div class="copy-button-container">
+                        <Button 
+                          size="small"
+                          variant="secondary"
+                          on:click={() => copyToClipboard(invite.code, invite._id)} 
+                          title="Copy to clipboard"
+                        >
+                          <Copy />
+                        </Button>
+                        {#if copiedStates[invite._id]}
+                          <div class="copied-notification">
+                            Copied!
+                          </div>
+                        {/if}
+                      </div>
                     </div>
                     <div class="invite-details">
                       <span class="invite-status {invite.isUsed ? 'used' : 'unused'}">
@@ -261,8 +282,43 @@
 <style>
   .dashboard {
     min-height: 100vh;
-    background: var(--bg-primary);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  @keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
   }
   
   .dashboard-header {
@@ -271,21 +327,27 @@
     align-items: center;
     margin-bottom: 3rem;
     padding: 2rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 24px;
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 10;
   }
   
   .header-content h1 {
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .header-content p {
-    color: var(--text-secondary);
+    color: #94a3b8;
     margin: 0;
     font-size: 1rem;
   }
@@ -308,7 +370,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .notes-grid {
@@ -319,16 +381,27 @@
 
   /* Ensure cards have proper background and flex layout */
   :global(.note-card) {
-    background: var(--bg-secondary) !important;
+    background: rgba(15, 15, 35, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(99, 102, 241, 0.2) !important;
     padding: 20px !important;
-    border-radius: 15px !important;
+    border-radius: 20px !important;
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   }
 
   :global(.note-card:hover) {
-    box-shadow: var(--shadow-lg);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(99, 102, 241, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px);
+    border-color: rgba(99, 102, 241, 0.4) !important;
   }
   
   .card-header {
@@ -339,7 +412,7 @@
   }
   
   .note-date {
-    color: var(--text-secondary);
+    color: #94a3b8;
     font-size: 0.875rem;
   }
   
@@ -354,14 +427,14 @@
     font-size: 1.125rem;
     font-weight: 600;
     margin: 0 0 0.5rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   
   .note-description {
-    color: var(--text-secondary);
+    color: #94a3b8;
     font-size: 0.875rem;
     font-style: italic;
     margin: 0 0 0.75rem 0;
@@ -372,7 +445,7 @@
   }
   
   .note-preview {
-    color: var(--text-secondary);
+    color: #94a3b8;
     line-height: 1.5;
     margin: 0;
     font-size: 0.875rem;
@@ -392,7 +465,7 @@
   .empty-state {
     text-align: center;
     padding: 4rem 2rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
   }
   
   .empty-icon {
@@ -403,7 +476,7 @@
   .empty-state h3 {
     font-size: 1.5rem;
     margin: 0 0 1rem 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
   
   .empty-state p {
@@ -426,15 +499,19 @@
   }
 
   .invite-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
     padding: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    box-shadow: var(--shadow);
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .invite-code {
@@ -443,15 +520,67 @@
     gap: 0.5rem;
   }
 
+  .copy-button-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .copied-notification {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(99, 102, 241, 0.9);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    animation: fadeInOut 2s ease-in-out;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  .copied-notification::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: rgba(99, 102, 241, 0.9);
+  }
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    15% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    85% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-5px);
+    }
+  }
+
   .invite-code code {
-    background: var(--bg-primary);
+    background: rgba(0, 0, 0, 0.4);
     padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
+    border-radius: 12px;
     font-family: 'Courier New', monospace;
     font-size: 1.1rem;
     font-weight: bold;
-    color: var(--primary-color);
-    border: 1px solid var(--border-color);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.3);
   }
 
 
@@ -472,19 +601,19 @@
   }
 
   .invite-status.unused {
-    color: var(--primary-color);
+    color: #6366f1;
   }
 
   .invite-date,
   .invite-used-date,
   .invite-expires {
-    color: var(--text-secondary);
+    color: #94a3b8;
   }
 
   .empty-invites {
     text-align: center;
     padding: 2rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
   }
   
   .invite-actions {

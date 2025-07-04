@@ -18,6 +18,9 @@ export const load = async (event: RequestEvent) => {
   const user = await getUser(event);
   const isOwner = user && user.id === note.userId;
   
+  // Get the creator's information
+  const creator = await db.getUserById(note.userId);
+  
   // Return note data (with content if it's public OR if user owns it)
   return {
     post: {
@@ -27,7 +30,8 @@ export const load = async (event: RequestEvent) => {
       secret_hash: note.secretHash || '',
       content: (!note.isSecret || isOwner) ? note.content : '',
       isOwner: isOwner || false,
-      isSecret: note.isSecret || false
+      isSecret: note.isSecret || false,
+      creator: creator ? { username: creator.username } : null
     },
     user: user
   };

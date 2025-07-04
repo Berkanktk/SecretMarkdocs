@@ -652,11 +652,48 @@ Happy writing! 🚀`}
 <style>
   .editor-page {
     min-height: 99vh;
-    background: var(--bg-primary);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     display: flex;
     flex-direction: column;
     opacity: 0;
     transition: opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .editor-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .editor-page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+      radial-gradient(circle at 40% 40%, rgba(99, 102, 241, 0.2) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  @keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
   }
 
   .editor-page.fade-in {
@@ -665,13 +702,16 @@ Happy writing! 🚀`}
 
   /* Header */
   .editor-header {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 10;
   }
 
   .header-left {
@@ -690,7 +730,7 @@ Happy writing! 🚀`}
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0;
-    color: var(--text-primary);
+    color: #f1f5f9;
   }
 
   .status-indicators {
@@ -751,13 +791,16 @@ Happy writing! 🚀`}
 
   /* Settings Bar */
   .settings-bar {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
+    position: relative;
+    z-index: 10;
   }
 
   .settings-left {
@@ -779,25 +822,86 @@ Happy writing! 🚀`}
     gap: 0.5rem;
   }
 
+  .visibility-group label {
+    font-weight: 500;
+    color: #f1f5f9;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+  }
+
 
 
   .visibility-select {
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    color: #f1f5f9;
     font-size: 0.875rem;
     min-width: 280px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     font-family: inherit;
+    letter-spacing: 0.02em;
+    box-shadow: 
+      0 4px 15px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    padding-right: 3rem;
+  }
+
+  .visibility-select:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
   }
 
   .visibility-select:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #6366f1;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 
+      0 0 0 3px rgba(99, 102, 241, 0.1),
+      0 4px 20px rgba(99, 102, 241, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+    animation: focusGlow 0.3s ease-out;
+  }
+
+  .visibility-select option {
+    background: rgba(15, 15, 35, 0.95);
+    color: #f1f5f9;
+    padding: 0.75rem;
+    border: none;
+    font-size: 0.875rem;
+  }
+
+  .visibility-select option:hover,
+  .visibility-select option:checked {
+    background: rgba(99, 102, 241, 0.2);
+    color: #f1f5f9;
+  }
+
+  @keyframes focusGlow {
+    0% {
+      box-shadow: 
+        0 0 0 0px rgba(99, 102, 241, 0.1),
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    100% {
+      box-shadow: 
+        0 0 0 3px rgba(99, 102, 241, 0.1),
+        0 4px 20px rgba(99, 102, 241, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
   }
 
   .secret-input-group {
