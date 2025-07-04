@@ -116,7 +116,7 @@
       <div class="notes-section">
         <div class="section-header">
           <h2>Your Notes</h2>
-          <p>You have {data.notes.length} notes</p>
+            <div>You have {data.notes.length} {data.notes.length === 1 ? 'note' : 'notes'}</div>
         </div>
         
         {#if data.notes.length > 0}
@@ -301,11 +301,6 @@
     font-weight: 600;
     margin: 0 0 0.5rem 0;
     color: var(--text-primary);
-  }
-  
-  .section-header p {
-    color: var(--text-secondary);
-    margin: 0;
   }
   
   .notes-grid {
