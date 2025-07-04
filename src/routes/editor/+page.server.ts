@@ -1,7 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions, RequestEvent } from '@sveltejs/kit';
-import { getUser } from '../../lib/auth';
-import { getDatabase } from '../../lib/db';
+import { getUser } from '$lib/auth';
+import { getDatabase } from '$lib/db';
 
 export const load = async (event: RequestEvent) => {
   const user = await getUser(event);

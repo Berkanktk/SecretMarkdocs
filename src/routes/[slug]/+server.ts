@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import { getDatabase } from '../../../lib/db';
+import { getDatabase } from '$lib/db';
 
 export const POST: RequestHandler = async ({ request, params }) => {
   const { slug } = params as { slug: string };

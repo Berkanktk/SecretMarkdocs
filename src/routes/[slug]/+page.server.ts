@@ -1,7 +1,7 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, RequestEvent } from '@sveltejs/kit';
-import { getDatabase } from '../../lib/db';
-import { getUser } from '../../lib/auth';
+import { getDatabase } from '$lib/db';
+import { getUser } from '$lib/auth';
 
 export const load = async (event: RequestEvent) => {
   const { params } = event;

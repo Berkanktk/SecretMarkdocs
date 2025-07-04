@@ -1,7 +1,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { Actions, RequestEvent } from '@sveltejs/kit';
-import { registerUser, setSessionCookie } from '../../../lib/auth';
-import { getDatabase } from '../../../lib/db';
+import { registerUser, setSessionCookie } from '$lib/auth';
+import { getDatabase } from '$lib/db';
 
 export const load = async ({ cookies }: RequestEvent) => {
   // If already logged in, redirect to dashboard
