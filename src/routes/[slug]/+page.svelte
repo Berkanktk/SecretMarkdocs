@@ -583,10 +583,6 @@
     border-top: 1px solid rgba(99, 102, 241, 0.1);
   }
 
-  .notice-icon {
-    font-size: 0.9rem;
-  }
-
   /* Responsive design */
   @media (max-width: 600px) {
     .secret-content {
@@ -716,22 +712,6 @@
     .secret-content {
       max-width: 100%;
       padding: 0 1rem;
-    }
-
-    .card-content {
-      padding: 1.5rem;
-    }
-
-    .card-header {
-      padding: 1.5rem 1.5rem 1rem 1.5rem;
-    }
-
-    .card-footer {
-      padding: 1rem 1.5rem 1.5rem 1.5rem;
-    }
-
-    .note-title {
-      font-size: 1.375rem;
     }
 
     .prose {
