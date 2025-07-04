@@ -301,64 +301,10 @@
     padding: 2rem;
   }
 
-  .input-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .input-label {
-    display: block;
-    font-weight: 600;
-    color: #e2e8f0;
-    margin-bottom: 0.75rem;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .secret-input {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 0.75rem;
-    background: rgba(15, 23, 42, 0.8);
-    color: #f8fafc;
-    font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: inherit;
-    backdrop-filter: blur(10px);
-    position: relative;
-  }
-
-  .secret-input:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 
-      0 0 0 3px rgba(99, 102, 241, 0.1),
-      0 0 15px rgba(99, 102, 241, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    background: rgba(15, 23, 42, 0.9);
-    transform: translateY(-1px);
-  }
-
-  .secret-input.error {
-    border-color: #ef4444;
-    box-shadow: 
-      0 0 0 3px rgba(239, 68, 68, 0.1),
-      0 0 20px rgba(239, 68, 68, 0.3);
-    animation: shake 0.5s ease-in-out;
-  }
-
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
     75% { transform: translateX(5px); }
-  }
-
-  .error-message {
-    color: #fca5a5;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    animation: fadeInUp 0.3s ease-out;
   }
 
   @keyframes fadeInUp {
@@ -370,71 +316,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  .unlock-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-    color: white;
-    border: none;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: inherit;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 
-      0 4px 15px rgba(79, 70, 229, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  .unlock-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .unlock-btn:hover::before {
-    left: 100%;
-  }
-
-  .unlock-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #4338ca, #5b21b6);
-    transform: translateY(-2px);
-    box-shadow: 
-      0 8px 25px rgba(79, 70, 229, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-
-  .unlock-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .unlock-btn.loading {
-    cursor: not-allowed;
-  }
-
-  .spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
   }
 
   @keyframes spin {
@@ -469,23 +350,6 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-  }
-
-  .unlocked-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    color: var(--accent-color);
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .unlock-icon {
-    font-size: 1rem;
   }
 
   .prose {

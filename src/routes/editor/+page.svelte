@@ -677,27 +677,6 @@ Happy writing! 🚀`}
     gap: 1rem;
   }
 
-  .back-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-  }
-
-  .back-button:hover {
-    background: var(--border-color);
-    color: var(--text-primary);
-    transform: translateX(-2px);
-  }
-
   .title-section {
     display: flex;
     flex-direction: column;
@@ -765,58 +744,6 @@ Happy writing! 🚀`}
     display: flex;
     gap: 0.75rem;
     align-items: center;
-  }
-
-  .delete-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #ef4444;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-  }
-
-  .delete-button:hover:not(:disabled) {
-    background: #dc2626;
-    transform: translateY(-1px);
-  }
-
-  .delete-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .save-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--primary-color);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-  }
-
-  .save-button:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-  }
-
-  .save-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
   }
 
   /* Settings Bar */
@@ -1198,10 +1125,6 @@ Happy writing! 🚀`}
     .settings-left {
       flex-direction: column;
       gap: 1rem;
-    }
-
-    .title-input {
-      min-width: auto;
     }
 
     .visibility-select {
