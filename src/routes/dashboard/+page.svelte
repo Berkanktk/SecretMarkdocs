@@ -19,6 +19,7 @@
   let invites: any[] = [];
   let showInviteSection = false;
   let generatingInvite = false;
+  let deletingInvite = false;
 
   async function loadInvites() {
     try {
@@ -65,6 +66,9 @@
   }
 
   async function deleteInvite(inviteId: string) {
+    if (deletingInvite) return;
+    
+    deletingInvite = true;
     try {
       const response = await fetch('/api/invites', {
         method: 'DELETE',
@@ -79,6 +83,8 @@
       }
     } catch (error) {
       
+    } finally {
+      deletingInvite = false;
     }
   }
 </script>
@@ -186,7 +192,7 @@
           
           {#if showInviteSection}
             <div class="invite-controls">
-              <Button on:click={generateInvite} disabled={generatingInvite}>
+              <Button on:click={generateInvite} loading={generatingInvite} disabled={generatingInvite}>
                 {generatingInvite ? 'Generating...' : 'Generate New Invite (24h)'}
               </Button>
             </div>
@@ -228,11 +234,13 @@
                       <Button 
                         variant="danger"
                         size="small"
+                        loading={deletingInvite}
+                        disabled={deletingInvite}
                         on:click={() => deleteInvite(invite._id)} 
                         title="Delete invite"
                       >
                         <Delete />
-                        Delete
+                        {deletingInvite ? 'Deleting...' : 'Delete'}
                       </Button>
                     </div>
                   </div>

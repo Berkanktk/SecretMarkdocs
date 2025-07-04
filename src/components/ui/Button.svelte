@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+  import Spinner from './icons/Spinner.svelte';
 
   export let variant = 'primary'; // 'primary', 'secondary', 'danger'
   export let size = 'medium'; // 'small', 'medium', 'large'
@@ -29,6 +30,9 @@
   on:click
   {...$$restProps}
 >
+  {#if loading}
+    <Spinner size={size === 'small' ? 12 : size === 'large' ? 18 : 16} />
+  {/if}
   <slot />
 </svelte:element>
 

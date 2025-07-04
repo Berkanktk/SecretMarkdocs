@@ -400,17 +400,18 @@
 
     <div class="header-right">
       {#if isEditing}
-        <Button variant="danger" on:click={deleteNote} disabled={deleting}>
+        <Button variant="danger" on:click={deleteNote} loading={deleting} disabled={deleting}>
           <Delete />
           {deleting ? "Deleting..." : "Delete"}
         </Button>
       {/if}
       <Button
         on:click={saveNote}
+        loading={saving}
         disabled={saving || (isSecret && !secret.trim() && (!isEditing || !originalIsSecret))}
       >
         <Save />
-        {isEditing ? "Update" : "Save"}
+        {saving ? (isEditing ? "Updating..." : "Saving...") : (isEditing ? "Update" : "Save")}
       </Button>
     </div>
   </header>
