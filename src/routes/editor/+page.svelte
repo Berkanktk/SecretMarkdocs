@@ -233,7 +233,9 @@
     deleting = true;
 
     try {
-      const response = await fetch("?/delete", {
+      // Include the edit parameter in the URL so the server knows which note to delete
+      const editSlug = $page.url.searchParams.get("edit");
+      const response = await fetch(`?/delete&edit=${encodeURIComponent(editSlug || "")}`, {
         method: "POST",
         body: new FormData(),
         redirect: "follow",
