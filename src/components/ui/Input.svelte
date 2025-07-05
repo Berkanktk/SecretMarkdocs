@@ -211,12 +211,6 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
-  /* Special styling for password inputs */
-  .input[type="password"] {
-    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-    letter-spacing: 0.1em;
-  }
-
   /* Enhanced focus ring animation */
   .input:focus {
     animation: focusGlow 0.3s ease-out;
