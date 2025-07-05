@@ -34,7 +34,7 @@
         <p class="auth-subtitle">Sign up to start managing your secret notes</p>
       </div>
       
-      <form method="POST" action="?/auth/register" use:enhance={() => {
+      <form method="POST" action="?/register" use:enhance={() => {
         return async ({ result, update }) => {
           if (result.type === 'redirect') {
             // Handle successful registration redirect
