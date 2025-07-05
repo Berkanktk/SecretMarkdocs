@@ -195,6 +195,7 @@ html {
   border-radius: 0.25rem;
   font-size: 0.875rem;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  line-break: anywhere;
 }
 
 .prose pre {
