@@ -131,7 +131,7 @@ The application automatically creates these collections:
 - [x] Centralized user management with invite codes
 - [X] Sharable links
 - [X] Secret protection for notes
-- [ ] Add a way to search & filter/sort notes
+- [x] Add a way to search & filter/sort notes
 - [ ] Encrypt notes
 
 ## 📄 License

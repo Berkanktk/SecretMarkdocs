@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { Button, Card, Badge, Plus, Copy, Delete } from '../../components/ui';
+  import { Button, Card, Badge, Plus, Copy, Delete, Input, Select } from '../../components/ui';
   
-  export let data: { user: any; notes: any[] };
+  export let data: { user: any; notes: any[]; searchParams: any };
   
   let mounted = false;
   
@@ -21,6 +21,13 @@
   let generatingInvite = false;
   let deletingInvite = false;
   let copiedStates: Record<string, boolean> = {}; // Track copied state for each invite
+
+  // Search and filter state
+  let searchTerm = data.searchParams.search || '';
+  let filterBy = data.searchParams.filter || 'all';
+  let sortBy = data.searchParams.sort || 'created';
+  let sortOrder = data.searchParams.order || 'desc';
+  let searchTimeout: NodeJS.Timeout;
 
   async function loadInvites() {
     try {
@@ -98,6 +105,38 @@
       deletingInvite = false;
     }
   }
+
+  // Search and filter functions
+  function updateUrlParams() {
+    const params = new URLSearchParams();
+    if (searchTerm) params.set('search', searchTerm);
+    if (filterBy !== 'all') params.set('filter', filterBy);
+    if (sortBy !== 'created') params.set('sort', sortBy);
+    if (sortOrder !== 'desc') params.set('order', sortOrder);
+    
+    const url = `/dashboard${params.toString() ? '?' + params.toString() : ''}`;
+    goto(url, { replaceState: true });
+  }
+
+  function onSearchInput() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      updateUrlParams();
+    }, 300);
+  }
+
+  function onFilterChange() {
+    updateUrlParams();
+  }
+
+  function onSortChange() {
+    updateUrlParams();
+  }
+
+  function clearSearch() {
+    searchTerm = '';
+    updateUrlParams();
+  }
 </script>
 
 <svelte:head>
@@ -133,10 +172,74 @@
     </div>
     
     <div class="dashboard-content">
+      <!-- Search and Filter Section -->
+      <div class="search-filter-section">
+        <div class="search-bar">
+          <label for="search">Search:</label>
+          <div class="search-input-container">
+            <Input
+              type="text"
+              placeholder="Search notes by title, description, or content..."
+              bind:value={searchTerm}
+              on:input={onSearchInput}
+            />
+            {#if searchTerm}
+              <!-- svelte-ignore a11y_consider_explicit_label -->
+              <button class="clear-search" on:click={clearSearch}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            {/if}
+          </div>
+        </div>
+        
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="filter-select">Filter:</label>
+            <select id="filter-select" bind:value={filterBy} on:change={onFilterChange} class="filter-select">
+              <option value="all">All Notes</option>
+              <option value="public">🌍 Public</option>
+              <option value="secret">🔒 Secret</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="sort-select">Sort by:</label>
+            <select id="sort-select" bind:value={sortBy} on:change={onSortChange} class="filter-select">
+              <option value="created">Date Created</option>
+              <option value="updated">Date Updated</option>
+              <option value="title">Title</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="order-select">Order:</label>
+            <select id="order-select" bind:value={sortOrder} on:change={onSortChange} class="filter-select">
+              <option value="desc">Newest First</option>
+              <option value="asc">Oldest First</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
       <div class="notes-section">
         <div class="section-header">
           <h2>Your Notes</h2>
-            <div>You have {data.notes.length} {data.notes.length === 1 ? 'note' : 'notes'}</div>
+            <div>
+              {#if searchTerm || filterBy !== 'all'}
+                Showing {data.notes.length} {data.notes.length === 1 ? 'note' : 'notes'}
+                {#if searchTerm}
+                  matching "{searchTerm}"
+                {/if}
+                {#if filterBy !== 'all'}
+                  ({filterBy} only)
+                {/if}
+              {:else}
+                You have {data.notes.length} {data.notes.length === 1 ? 'note' : 'notes'}
+              {/if}
+            </div>
         </div>
         
         {#if data.notes.length > 0}
@@ -184,13 +287,18 @@
         {:else}
           <div class="empty-state">
             <div class="empty-icon">📝</div>
-            <h3>No notes yet</h3>
-            <p>Create your first note to get started!</p>
-            <!-- @ts-ignore -->
-            <Button href="/editor">
-              <Plus />
-              Create Note
-            </Button>
+            {#if searchTerm || filterBy !== 'all'}
+              <h3>No notes found</h3>
+              <p>Try adjusting your search or filter criteria</p>
+            {:else}
+              <h3>No notes yet</h3>
+              <p>Create your first note to get started!</p>
+              <!-- @ts-ignore -->
+              <Button href="/editor">
+                <Plus />
+                Create Note
+              </Button>
+            {/if}
           </div>
         {/if}
       </div>
@@ -643,6 +751,127 @@
 
     .invite-details {
       width: 100%;
+    }
+  }
+
+  /* Search and Filter Styles */
+  .search-filter-section {
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search-bar {
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .search-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .clear-search {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clear-search:hover {
+    color: #f1f5f9;
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .filter-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #f1f5f9;
+  }
+
+  .filter-select {
+    background: rgba(15, 15, 35, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    color: #f1f5f9;
+    font-size: 0.875rem;
+    min-width: 140px;
+    max-width: 180px;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f1f5f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  }
+
+  .filter-select:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+
+  .filter-select option {
+    background: rgba(15, 15, 35, 0.95);
+    color: #f1f5f9;
+    padding: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .search-filter-section {
+      padding: 1rem;
+    }
+    
+    .filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .filter-group {
+      width: 100%;
+    }
+    
+    .filter-select {
+      min-width: 100%;
     }
   }
 </style> 

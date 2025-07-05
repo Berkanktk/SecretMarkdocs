@@ -132,6 +132,11 @@ html {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
+.search-input-container .input-group {
+  min-width: -webkit-fill-available !important;
+}
+
+
 .error {
   color: #ef4444;
   font-size: 0.875rem;

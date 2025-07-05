@@ -10,11 +10,24 @@ export const load = async (event: RequestEvent) => {
     throw redirect(302, '/auth/login');
   }
   
+  // Get search/filter parameters from URL
+  const url = event.url;
+  const searchTerm = url.searchParams.get('search') || '';
+  const filterBy = url.searchParams.get('filter') as 'all' | 'public' | 'secret' || 'all';
+  const sortBy = url.searchParams.get('sort') as 'created' | 'updated' | 'title' || 'created';
+  const sortOrder = url.searchParams.get('order') as 'asc' | 'desc' || 'desc';
+  
   const db = await getDatabase();
-  const notes = await db.getUserNotes(user.id);
+  const notes = await db.getUserNotesWithFilters(user.id, searchTerm, filterBy, sortBy, sortOrder);
   
   return {
     user,
-    notes
+    notes,
+    searchParams: {
+      search: searchTerm,
+      filter: filterBy,
+      sort: sortBy,
+      order: sortOrder
+    }
   };
 }; 

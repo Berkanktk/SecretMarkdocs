@@ -171,6 +171,59 @@ export class Database {
     return notes.map(note => ({ ...note, _id: note._id?.toString() }));
   }
 
+  async getUserNotesWithFilters(
+    userId: string,
+    searchTerm?: string,
+    filterBy?: 'all' | 'public' | 'secret',
+    sortBy?: 'created' | 'updated' | 'title',
+    sortOrder?: 'asc' | 'desc'
+  ): Promise<Note[]> {
+    // Build the MongoDB query
+    let query: any = { userId };
+
+    // Add search functionality
+    if (searchTerm && searchTerm.trim()) {
+      query.$or = [
+        { title: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+        { content: { $regex: searchTerm, $options: 'i' } }
+      ];
+    }
+
+    // Add filter functionality
+    if (filterBy && filterBy !== 'all') {
+      if (filterBy === 'public') {
+        query.isSecret = false;
+      } else if (filterBy === 'secret') {
+        query.isSecret = true;
+      }
+    }
+
+    // Build the sort criteria
+    let sortCriteria: any = {};
+    if (sortBy) {
+      switch (sortBy) {
+        case 'created':
+          sortCriteria.createdAt = sortOrder === 'asc' ? 1 : -1;
+          break;
+        case 'updated':
+          sortCriteria.updatedAt = sortOrder === 'asc' ? 1 : -1;
+          break;
+        case 'title':
+          sortCriteria.title = sortOrder === 'asc' ? 1 : -1;
+          break;
+        default:
+          sortCriteria.createdAt = -1; // Default to newest first
+      }
+    } else {
+      sortCriteria.createdAt = -1; // Default to newest first
+    }
+
+    // Execute the query
+    const notes = await this.notes.find(query).sort(sortCriteria).toArray();
+    return notes.map(note => ({ ...note, _id: note._id?.toString() }));
+  }
+
   async updateNote(
     slug: string, 
     title: string, 
