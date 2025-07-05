@@ -506,6 +506,11 @@
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
   }
 
+  .security-input.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
   .security-input::placeholder {
     color: #64748b;
   }
@@ -530,6 +535,10 @@
 
   .security-input:focus + .input-border {
     opacity: 1;
+  }
+
+  .security-input.error:focus + .input-border {
+    opacity: 0;
   }
 
   .error-message {
