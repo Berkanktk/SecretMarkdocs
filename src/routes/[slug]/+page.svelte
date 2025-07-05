@@ -7,7 +7,7 @@
   import { marked } from "marked";
   import hljs from "highlight.js";
   import "highlight.js/styles/github-dark-dimmed.css";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
   import { Button, Input, Card, Badge, ArrowLeft, Shield } from '../../components/ui';
 
@@ -33,6 +33,8 @@
   let error = "";
   let loading = false;
   let mounted = false;
+  let showScrollToTop = false;
+  let scrollCleanup: (() => void) | null = null;
 
   onMount(() => {
     mounted = true;
@@ -44,6 +46,15 @@
     
     // Add smooth scrolling to fragment links
     setupFragmentScrolling();
+    
+    // Add scroll listener for scroll to top button
+    scrollCleanup = setupScrollToTop();
+  });
+
+  onDestroy(() => {
+    if (scrollCleanup) {
+      scrollCleanup();
+    }
   });
 
   function setupFragmentScrolling() {
@@ -64,6 +75,26 @@
           }
         }
       }
+    });
+  }
+
+  function setupScrollToTop() {
+    const handleScroll = () => {
+      showScrollToTop = window.scrollY > 200;
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Return cleanup function for onDestroy
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
   }
 
@@ -248,6 +279,15 @@
       {/if}
     </div>
   </div>
+{/if}
+
+<!-- Scroll to Top Button -->
+{#if showScrollToTop}
+  <button class="scroll-to-top" on:click={scrollToTop} title="Scroll to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
 {/if}
 
 <style>
@@ -728,6 +768,66 @@
       width: 100%;
       justify-content: flex-start;
       flex-wrap: wrap;
+    }
+  }
+
+  /* Scroll to Top Button */
+  .scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: rgba(15, 15, 35, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 50%;
+    color: #6366f1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    animation: fadeInUp 0.3s ease;
+  }
+
+  .scroll-to-top:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(99, 102, 241, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(15, 15, 35, 0.95);
+  }
+
+  .scroll-to-top:active {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .scroll-to-top {
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 45px;
+      height: 45px;
     }
   }
 </style>
