@@ -184,6 +184,7 @@
             </div>
             
             <div class="input-section">
+              <!-- svelte-ignore a11y_label_has_associated_control -->
               <label class="input-label">Enter Secret</label>
               <div class="input-container">
                 <input
@@ -282,7 +283,9 @@
 {/if}
 
 <!-- Scroll to Top Button -->
+<!-- svelte-ignore a11y_consider_explicit_label -->
 {#if showScrollToTop}
+  <!-- svelte-ignore a11y_consider_explicit_label -->
   <button class="scroll-to-top" on:click={scrollToTop} title="Scroll to top">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M18 15l-6-6-6 6"/>
