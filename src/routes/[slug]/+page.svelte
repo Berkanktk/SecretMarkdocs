@@ -760,6 +760,17 @@
     color: #6366f1;
   }
 
+  :global(.prose blockquote) {
+    border-left: 4px solid #6366f1;
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: #94a3b8;
+    font-style: italic;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 0 0.5rem 0.5rem 0;
+    padding: 0.25rem 1rem;
+  }
+
   @media (max-width: 768px) {
     .secret-content {
       max-width: 100%;
