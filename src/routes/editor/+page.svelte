@@ -49,6 +49,9 @@
   onMount(() => {
     mounted = true;
 
+    // Add editor-body class to prevent page scrolling
+    document.body.classList.add('editor-body');
+
     // Check if we're editing an existing note
     const editSlug = $page.url.searchParams.get("edit");
     if (editSlug && data.note) {
@@ -66,6 +69,11 @@
       initializeEditor();
       setupFragmentScrolling();
     }, 100);
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('editor-body');
+    };
   });
 
   function initializeEditor() {
@@ -651,7 +659,7 @@ Happy writing! 🚀`}
 
 <style>
   .editor-page {
-    min-height: 99vh;
+    height: 100vh;
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     display: flex;
     flex-direction: column;
@@ -993,8 +1001,8 @@ Happy writing! 🚀`}
     resize: none;
     outline: none;
     tab-size: 2;
-    min-height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   /* Custom scrollbar for editor */
@@ -1024,8 +1032,8 @@ Happy writing! 🚀`}
     padding: 1.5rem;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     background: var(--bg-primary);
-    min-height: 100%;
   }
 
   /* Custom scrollbar for preview */

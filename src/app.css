@@ -46,6 +46,11 @@ body {
   min-height: 100vh;
 }
 
+body.editor-body {
+  height: 100vh;
+  overflow: hidden;
+}
+
 img {
   max-width: 75%;
   border-radius: 12px;
